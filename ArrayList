@@ -1,0 +1,102 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class ArrayList
+{
+public:
+    ArrayList()
+    {
+        array = new int[ARR_SIZE];
+        space = 0;
+        size = ARR_SIZE;
+    }
+
+    ArrayList(const ArrayList &src)
+    {
+        array = new int[src.size];
+        space = src.space;
+        size = src.size;
+
+        for(int i = 0; i < space; ++i)
+            array[i] = src.array[i]; 
+    }
+
+    ~ArrayList()
+    {
+        delete[] array;
+    }
+
+    void insert(int place, int value)
+    {
+        if ((place < 0) || (place > space))
+            std::cout << "Sorry, that index is not accessible" << std::endl;
+        else
+        {
+            if (space == size)
+                allocate();
+
+            for(int i = space-1; i > place; --i)
+                array[i] = array[i-1];
+
+            array[place] = value;
+            ++space;
+        }
+    }
+
+    void remove(int place)
+    {
+        if ((place < 0) || (place >= space))
+            std::cout << "Sorry, that index is not accessible" << std::endl;
+        else
+        {
+            for(int i = place+1; i < space; ++i)
+                array[i-1] = array[i];
+
+            --space;
+        }
+    }
+
+    void allocate()
+    {
+        int* newarray = new int[size*2];
+
+        for (int i = 0; i < space; ++i)
+            newarray[i] = array[i];
+
+        delete[] array;
+        array = newarray;
+
+        size *= 2;
+    }
+
+    int usedSize()
+    {
+        return space;
+    }
+
+    int totalSize()
+    {
+        return size;
+    }
+
+    ArrayList& operator=(const ArrayList &src)
+    {
+        int *newarray = new int[src.size];
+
+        for(int i = 0; i < src.space; ++i)
+            newarray[i] = src.array[i]; 
+
+        delete[] array;
+        array = newarray;
+        space = src.space;
+        size = src.size;
+
+        return *this;
+    }
+
+private:
+    int *array;
+    int space;
+    int size;
+};
